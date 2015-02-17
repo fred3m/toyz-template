@@ -7,20 +7,94 @@ Toyz.namespace('Toyz.Template');
 // Check to see if all of the API's dependencies have loaded
 // If not, return false
 Toyz.Template.dependencies_loaded = function(){
-    return true;
+    return false;
 };
 // Load any dependencies of the tile
-Toyz.Template.load_dependencies = function(callback, params){
+Toyz.Template.load_dependencies = function(callback){
     // Check to see if ace loaded from the server
     if(!Toyz.Template.dependencies_loaded()){
         console.log('Loading Template dependencies');
-        Toyz.Core.load_dependencies({
-            core: true,
-            css: [
-                "/toyz/static/toyz_template/studio.css"
-            ]
-        });
+        Toyz.Core.load_dependencies(
+            {
+                //js:["js dependencies here"],
+                css: [
+                    "/toyz/static/toyz_template/template.css"
+                ]
+            },
+            function(){
+                console.log('Template dependencies loaded');
+                callback();
+            }
+        );
     };
+};
+
+// It is often useful (but not required) to create interactive controls and displays
+// on the tile. This is an example of a set of controls
+Toyz.Template.Gui = function(params){
+    this.$div = $('<div/>');
+    this.$parent = params.$parent;
+    this.$parent.append(this.$div);
+    this.workspace = params.workspace;
+    this.tile_contents = params.tile_contents;
+    
+    var gui = {
+        type: 'div',
+        params: {
+            x: {
+                lbl: 'x',
+                prop: {
+                    type: 'Number',
+                    value: 2
+                }
+            },
+            y: {
+                lbl: 'y',
+                prop: {
+                    type: 'Number',
+                    value: 4
+                }
+            },
+            z: {
+                lbl: 'z',
+                prop: {
+                    type: 'Number',
+                    value: 6
+                }
+            },
+            submit: {
+                type: 'button',
+                prop: {
+                    innerHTML: 'Submit'
+                },
+                func: {
+                    click: function(){
+                        var params = this.gui.get();
+                        console.log('params:', params);
+                        this.workspace.websocket.send_task({
+                            task: {
+                                module: 'toyz_template.tasks',
+                                task: 'sample_function',
+                                parameters: params
+                            },
+                            callback: function(result){
+                                alert(
+                                    'sum:'+result.sum+
+                                    '\nproduct:'+result.product+
+                                    '\nmean:'+result.mean
+                                );
+                            }
+                        });
+                    }.bind(this)
+                }
+            }
+        }
+    };
+    
+    this.gui = new Toyz.Gui.Gui({
+        params: gui,
+        $parent: this.$div
+    });
 };
 
 // This is the main object contained in the tile
@@ -43,10 +117,15 @@ Toyz.Template.Contents = function(params){
         items: this.contextMenu_items()
     });
     
-    // Add things to the div
-    var $new_div = $('<div/>')
-        .html('New template tile!');
-    this.$tile_div.append($new_div);
+    
+    // Example of things to add to the tile div
+    this.$div = $('<div/>').addClass('template-tile');
+    this.$tile_div.append(this.$div);
+    this.gui_div = new Toyz.Template.Gui({
+        $parent: this.$div,
+        workspace: workspace,
+        tile_contents: this
+    });
     
     console.log('Template contents created');
 };
@@ -82,17 +161,19 @@ Toyz.Template.Contents.prototype.save = function(options){
 Toyz.Template.Contents.prototype.contextMenu_items = function(){
     var items = $.extend(true,{
         option1: {
-            name: "Remove selected points", 
+            name: "First Option", 
             callback: function(key, options){
                 console.log('key', key);
                 console.log('options', options);
+                alert('You chose '+key)
             }.bind(this)
         },
         option2: {
-            name: "Remove selected points", 
+            name: "Second Option", 
             callback: function(key, options){
                 console.log('key', key);
                 console.log('options', options);
+                alert('You chose '+key);
             }.bind(this)
         },
         template_sep1: "--------------",

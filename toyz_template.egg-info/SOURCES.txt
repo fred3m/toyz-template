@@ -1,0 +1,15 @@
+MANIFEST.in
+setup.py
+toyz_template/__init__.py
+toyz_template/config.py
+toyz_template/config.pyc
+toyz_template/tasks.py
+toyz_template/tasks.pyc
+toyz_template.egg-info/PKG-INFO
+toyz_template.egg-info/SOURCES.txt
+toyz_template.egg-info/dependency_links.txt
+toyz_template.egg-info/not-zip-safe
+toyz_template.egg-info/top_level.txt
+toyz_template/static/template.css
+toyz_template/static/template.js
+toyz_template/templates/template.html

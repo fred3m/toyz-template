@@ -23,11 +23,13 @@ def sample_function(toyz_settings, tid, params):
     """
     # Check to make sure that the user has specified all mandatory parameters
     core.check4keys(params, ['x', 'y', 'z'])
-    
+    x = params['x']
+    y = params['y']
+    z = params['z']
     response = {
         'id': 'sample_function',
         'sum': x+y+z,
-        'product': x*y*z
+        'product': x*y*z,
         'mean': (x+y+z)/3
     }
     

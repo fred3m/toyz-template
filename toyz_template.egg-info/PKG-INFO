@@ -1,0 +1,12 @@
+Metadata-Version: 1.1
+Name: toyz-template
+Version: 0.0.dev
+Summary: Template for new Toyz
+Home-page: www.your_webpage_here.com
+Author: myname
+Author-email: myemail@host.com
+License: MIT
+Description: For this repository to create your own toyz
+Platform: UNKNOWN
+Requires: tornado
+Requires: toyz
